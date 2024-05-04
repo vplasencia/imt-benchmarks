@@ -8,9 +8,14 @@
         "lint": "next lint"
     },
     "dependencies": {
+        "@zk-kit/imt": "^2.0.0-beta.4",
+        "apexcharts": "^3.49.0",
         "next": "14.2.3",
+        "poseidon-lite": "^0.2.0",
         "react": "^18",
-        "react-dom": "^18"
+        "react-apexcharts": "^1.4.1",
+        "react-dom": "^18",
+        "tinybench": "^2.8.0"
     },
     "devDependencies": {
         "@types/node": "^20",
