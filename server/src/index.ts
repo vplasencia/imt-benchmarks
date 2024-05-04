@@ -25,8 +25,8 @@ async function main() {
     const leanIMTHash = (a: any, b: any) => poseidon2([a, b])
     let leanIMT: LeanIMT
 
-    let imtProof: IMTMerkleProof;
-    let leanIMTProof: LeanIMTMerkleProof;
+    let imtProof: IMTMerkleProof
+    let leanIMTProof: LeanIMTMerkleProof
 
     bench
         .add(
