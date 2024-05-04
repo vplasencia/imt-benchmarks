@@ -2,20 +2,20 @@
     "name": "imt-benchmarks",
     "packageManager": "yarn@4.2.1",
     "scripts": {
-        "benchmark": "ts-node src/index.ts",
+        "server": "ts-node server/src/index.ts",
+        "client": "cd client && yarn dev",
         "lint": "eslint . --ext .js,.ts",
         "prettier": "prettier -c .",
         "prettier:write": "prettier -w ."
     },
+    "workspaces": [
+        "client",
+        "server"
+    ],
     "devDependencies": {
         "@types/node": "^20.12.8",
         "prettier": "^3.2.5",
-        "tinybench": "^2.8.0",
         "ts-node": "^10.9.2",
         "typescript": "^5.4.5"
-    },
-    "dependencies": {
-        "@zk-kit/imt": "^2.0.0-beta.4",
-        "poseidon-lite": "^0.2.0"
     }
 }

@@ -1,0 +1,11 @@
+{
+    "name": "server",
+    "packageManager": "yarn@4.2.1",
+    "devDependencies": {
+        "tinybench": "^2.8.0"
+    },
+    "dependencies": {
+        "@zk-kit/imt": "^2.0.0-beta.4",
+        "poseidon-lite": "^0.2.0"
+    }
+}
