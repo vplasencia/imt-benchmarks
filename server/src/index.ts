@@ -7,7 +7,7 @@ const tableFunc = (task: Task) => {
         return {
             Function: task.name,
             "ops/sec": task.result.error ? "NaN" : parseInt(task.result.hz.toString(), 10).toLocaleString(),
-            "Average Time (ms)": task.result.error ? "NaN" : task.result.mean,
+            "Average Time (ms)": task.result.error ? "NaN" : task.result.mean.toFixed(5),
             Margin: task.result.error ? "NaN" : `\xb1${task.result.rme.toFixed(2)}%`,
             Samples: task.result.error ? "NaN" : task.result.samples.length
         }
