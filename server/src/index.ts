@@ -175,7 +175,26 @@ async function main() {
     await bench.warmup()
     await bench.run()
 
-    console.table(bench.table((task) => generateTable(task)))
+    const table = bench.table((task) => generateTable(task))
+
+    // Add column to show how many times the LeanIMT is faster than the IMT.
+    // Formula: IMT average execution time divided by LeanIMT average execution time.
+    // Using LeanIMT ops/sec divided by IMT ops/sec would work too.
+    table.map((rowInfo, i) => {
+        if (rowInfo && !(rowInfo["Function"] as string).includes("LeanIMT")) {
+            rowInfo["Relative to IMT"] = ""
+        } else if (rowInfo) {
+            const imtAvgExecTime = bench.tasks[i - 1].result?.mean
+
+            const leanIMTAvgExecTime = bench.tasks[i]!.result?.mean
+
+            if (imtAvgExecTime && leanIMTAvgExecTime) {
+                rowInfo["Relative to IMT"] = `${(imtAvgExecTime / leanIMTAvgExecTime).toFixed(2)} x faster`
+            } else return "NaN"
+        }
+    })
+
+    console.table(table)
 
     // console.log(bench.results[0])
 }
