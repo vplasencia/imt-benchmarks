@@ -2,7 +2,7 @@ import { Bench, Task } from "tinybench"
 import { IMT, IMTMerkleProof, LeanIMT, LeanIMTMerkleProof } from "@zk-kit/imt"
 import { poseidon2 } from "poseidon-lite"
 
-const tableFunc = (task: Task) => {
+const generateTable = (task: Task) => {
     if (task && task.name && task.result) {
         return {
             Function: task.name,
@@ -175,7 +175,7 @@ async function main() {
     await bench.warmup()
     await bench.run()
 
-    console.table(bench.table((task) => tableFunc(task)))
+    console.table(bench.table((task) => generateTable(task)))
 
     // console.log(bench.results[0])
 }

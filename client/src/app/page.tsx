@@ -10,18 +10,7 @@ import { useEffect, useState } from "react"
 import { IMT, LeanIMT } from "@zk-kit/imt"
 import { poseidon2 } from "poseidon-lite"
 import { ApexOptions } from "apexcharts"
-
-const tableFunc = (task: Task) => {
-    if (task && task.name && task.result) {
-        return {
-            Function: task.name,
-            "ops/sec": task.result.error ? "NaN" : parseInt(task.result.hz.toString(), 10).toLocaleString(),
-            "Average Time (ms)": task.result.error ? "NaN" : task.result.mean,
-            Margin: task.result.error ? "NaN" : `\xb1${task.result.rme.toFixed(2)}%`,
-            Samples: task.result.error ? "NaN" : task.result.samples.length
-        }
-    }
-}
+import Table from "@/components/Table"
 
 export type ChartProps = {
     options: ApexOptions
@@ -32,7 +21,7 @@ export default function Home() {
     const [insertConfig, setInsertConfig] = useState({
         options: {
             chart: {
-                id: "basic-bar"
+                id: "line-insert"
             },
             xaxis: {
                 categories: [1, 2, 3]
@@ -45,22 +34,28 @@ export default function Home() {
             }
         ]
     })
-    // const config = {
-    //     options: {
-    //         chart: {
-    //             id: "basic-bar"
-    //         },
-    //         xaxis: {
-    //             categories: [1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998]
-    //         }
-    //     },
-    //     series: [
-    //         {
-    //             name: "series-1",
-    //             data: [30, 40, 45, 50, 49, 60, 70, 91]
-    //         }
-    //     ]
-    // }
+    const [tableInfo, setTableInfo] = useState([
+        {
+            Function: "-",
+            "ops/sec": "-",
+            "Average Time (ms)": "-",
+            Margin: "-",
+            Samples: "-"
+        }
+    ])
+
+    const generateTable = (task: Task) => {
+        if (task && task.name && task.result) {
+            return {
+                Function: task.name,
+                "ops/sec": task.result.error ? "NaN" : parseInt(task.result.hz.toString(), 10).toLocaleString(),
+                "Average Time (ms)": task.result.error ? "NaN" : task.result.mean.toFixed(5),
+                Margin: task.result.error ? "NaN" : `\xb1${task.result.rme.toFixed(2)}%`,
+                Samples: task.result.error ? "NaN" : task.result.samples.length
+            }
+        }
+    }
+
     useEffect(() => {
         const func = async () => {
             const bench = new Bench({ time: 0, iterations: 200 })
@@ -103,7 +98,7 @@ export default function Home() {
             const config = {
                 options: {
                     chart: {
-                        id: "basic-bar"
+                        id: "line-insert"
                     },
                     xaxis: {
                         categories: Array.from({ length: 200 }, (_, i) => i + 1),
@@ -145,21 +140,24 @@ export default function Home() {
             }
 
             setInsertConfig(config)
+
+            setTableInfo(bench.table((task) => generateTable(task)) as any)
         }
         func()
     }, [])
     return (
         <div className="app">
-            <div className="row">
-                <div className="mixed-chart">
-                    <Chart
-                        options={insertConfig.options}
-                        series={insertConfig.series}
-                        type="line"
-                        width="800"
-                        height="500"
-                    />
-                </div>
+            <div className="w-90 h-auto">
+                <Chart
+                    options={insertConfig.options}
+                    series={insertConfig.series}
+                    type="line"
+                    width="800"
+                    height="500"
+                />
+            </div>
+            <div>
+                <Table data={tableInfo} />
             </div>
         </div>
     )
