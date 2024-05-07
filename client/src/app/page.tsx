@@ -57,7 +57,7 @@ export default function Home() {
 
     useEffect(() => {
         const func = async () => {
-            const bench = new Bench({ time: 0, iterations: 200 })
+            const bench = new Bench({ time: 0, iterations: 100 })
             const imtDepth = 16
             const imtZeroValue = 0
             const imtArity = 2
@@ -100,7 +100,7 @@ export default function Home() {
                         id: "line-insert"
                     },
                     xaxis: {
-                        categories: Array.from({ length: 200 }, (_, i) => i + 1),
+                        categories: Array.from({ length: 100 }, (_, i) => i + 1),
                         title: {
                             text: "Members"
                         },
