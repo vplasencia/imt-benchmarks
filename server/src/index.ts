@@ -121,7 +121,7 @@ async function main() {
             }
         )
         .add(
-            "IMT - createProof",
+            "IMT - generateProof",
             () => {
                 imt.createProof(0)
             },
@@ -204,5 +204,3 @@ main()
         console.error(error)
         process.exit(1)
     })
-
-const bench = new Bench({ time: 100 })
