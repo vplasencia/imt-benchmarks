@@ -166,6 +166,7 @@ export default function Home() {
     return (
         <div className="app">
             <div className="w-90 h-auto">
+                <div className="font-medium text-2xl">Insert members</div>
                 <Chart
                     options={insertConfig.options}
                     series={insertConfig.series}
