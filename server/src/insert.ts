@@ -19,7 +19,9 @@ const generateTable = (task: Task) => {
 }
 
 async function main() {
-    const bench = new Bench({ time: 0, iterations: 65536 })
+    const samples = 131090
+
+    const bench = new Bench({ time: 0, iterations: samples })
 
     let imtDepth = 0
     const imtZeroValue = 0
