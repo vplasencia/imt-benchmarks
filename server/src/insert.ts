@@ -5,7 +5,7 @@
 import { Bench, Task } from "tinybench"
 import { IMT, LeanIMT } from "@zk-kit/imt"
 import { poseidon2 } from "poseidon-lite"
-import { saveInfoJSON } from "server/scripts/save-info"
+import { saveInfoJSON } from "../utils/save-info"
 
 const generateTable = (task: Task) => {
     if (task && task.name && task.result) {
