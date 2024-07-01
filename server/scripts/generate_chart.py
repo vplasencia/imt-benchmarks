@@ -1,14 +1,7 @@
 import matplotlib.pyplot as plt
-import json
+from read_json_data import read_json_data
 
-file_path = './data/data.json'
-
-# Open and read the JSON file
-with open(file_path, 'r') as file:
-    data = json.load(file)
-
-# Print the loaded data
-print(len(data[0]['samples']))
+data = read_json_data('./data/data.json')
 
 samplesSize = len(data[0]['samples'])
 
