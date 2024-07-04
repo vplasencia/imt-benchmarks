@@ -12,16 +12,22 @@ y1 = data[0]['samples']
 
 y2 = data[1]['samples']
 
+# Downsample data for better visualization
+downsample_rate = 10
+x = x[::downsample_rate]
+y1 = y1[::downsample_rate]
+y2 = y2[::downsample_rate]
+
 # plot
 fig, ax = plt.subplots()
 
-ax.plot(x, y1, linewidth=2, color='#3b82f6', label='IMT')
-ax.plot(x, y2, linewidth=2, color='#ec4899', label='LeanIMT')
+ax.plot(x, y1, linewidth=2, color='#3b82f6', label='LeanIMT Loop Insertion')
+ax.plot(x, y2, linewidth=2, color='#ec4899', label='LeanIMT Batch Insertion')
 
 # ax.set(xlim=(0, 1000),ylim=(0, 1000))
 
 # Add titles and labels
-ax.set_title('Insert vs Insert Many LeanIMT')
+ax.set_title('Loop Insertion vs Batch Insertion LeanIMT')
 ax.set_xlabel('Members')
 ax.set_ylabel('Time (ms)')
 

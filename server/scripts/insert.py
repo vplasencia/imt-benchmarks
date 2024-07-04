@@ -11,6 +11,12 @@ y1 = data[0]['samples']
 
 y2 = data[1]['samples']
 
+# Downsample data for better visualization
+downsample_rate = 100
+x = x[::downsample_rate]
+y1 = y1[::downsample_rate]
+y2 = y2[::downsample_rate]
+
 # plot
 fig, ax = plt.subplots()
 
