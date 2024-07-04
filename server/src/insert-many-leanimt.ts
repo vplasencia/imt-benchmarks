@@ -1,9 +1,9 @@
 /**
- * Generate benchmarks for the insert function to show
+ * Generate benchmarks for the insert many function to show
  * the flow of the algorithm with a really large number of members.
  */
 import { Bench, Task } from "tinybench"
-import { IMT, LeanIMT } from "@zk-kit/imt"
+import { LeanIMT } from "@zk-kit/imt"
 import { poseidon2 } from "poseidon-lite"
 import { saveInfoJSON } from "../utils/save-info"
 
@@ -23,44 +23,48 @@ async function main() {
 
     const bench = new Bench({ time: 0, iterations: samples })
 
-    let imtDepth = 0
-    const imtZeroValue = 0
-    const imtArity = 2
-    let imt: IMT
+    const leanIMTHash1 = (a: any, b: any) => poseidon2([a, b])
 
-    const leanIMTHash = (a: any, b: any) => poseidon2([a, b])
-    let leanIMT: LeanIMT
+    const leanIMTHash2 = (a: any, b: any) => poseidon2([a, b])
+
+    let leanIMT1: LeanIMT
+
+    let leanIMT2: LeanIMT
+
+    let members1: bigint[]
+
+    let members2: bigint[]
+
+    let count1 = 0
+
+    let count2 = 0
 
     bench
         .add(
-            "IMT - Insert",
+            "LeanIMT - insert in Loop",
             () => {
-                imt.insert(1n)
+                for (let i = 0; i < count1; i++) {
+                    leanIMT1.insert(members1[i])
+                }
             },
             {
-                beforeAll: () => {
-                    imt = new IMT(poseidon2, imtDepth, imtZeroValue, imtArity)
-                },
                 beforeEach: () => {
-                    const size = imt.leaves.length
-
-                    // If adding a new leaf does not fit the current tree depth,
-                    // a new tree will be created with the current depth + 1
-                    if (Math.log2(size + 1) > imtDepth) {
-                        imtDepth += 1
-                        imt = new IMT(poseidon2, imtDepth, imtZeroValue, imtArity, imt.leaves)
-                    }
+                    leanIMT1 = new LeanIMT(leanIMTHash1)
+                    count1 += 1
+                    members1 = Array.from({ length: count1 }, (_, i) => BigInt(i))
                 }
             }
         )
         .add(
-            "LeanIMT - Insert",
+            "LeanIMT - insertMany",
             () => {
-                leanIMT.insert(1n)
+                leanIMT2.insertMany(members2)
             },
             {
-                beforeAll: () => {
-                    leanIMT = new LeanIMT(leanIMTHash)
+                beforeEach: () => {
+                    leanIMT2 = new LeanIMT(leanIMTHash2)
+                    count2 += 1
+                    members2 = Array.from({ length: count2 }, (_, i) => BigInt(i))
                 }
             }
         )
@@ -74,15 +78,15 @@ async function main() {
     // Formula: IMT average execution time divided by LeanIMT average execution time.
     // Using LeanIMT ops/sec divided by IMT ops/sec would work too.
     table.map((rowInfo, i) => {
-        if (rowInfo && !(rowInfo["Function"] as string).includes("LeanIMT")) {
-            rowInfo["Relative to IMT"] = ""
+        if (rowInfo && !(rowInfo["Function"] as string).includes("LeanIMT - insertMany")) {
+            rowInfo["Relative to Insert"] = ""
         } else if (rowInfo) {
             const imtAvgExecTime = bench.tasks[i - 1].result?.mean
 
             const leanIMTAvgExecTime = bench.tasks[i]!.result?.mean
 
             if (imtAvgExecTime && leanIMTAvgExecTime) {
-                rowInfo["Relative to IMT"] = `${(imtAvgExecTime / leanIMTAvgExecTime).toFixed(2)} x faster`
+                rowInfo["Relative to Insert"] = `${(imtAvgExecTime / leanIMTAvgExecTime).toFixed(2)} x faster`
             } else return "NaN"
         }
     })
@@ -91,7 +95,7 @@ async function main() {
 
     // console.log(bench.results)
 
-    const filePath = "./data/insert.json"
+    const filePath = "./data/insert-many-leanimt.json"
 
     saveInfoJSON(bench.results, filePath)
 }
