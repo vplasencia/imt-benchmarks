@@ -7,6 +7,39 @@ import { IMT, LeanIMT } from "@zk-kit/imt"
 import { poseidon2 } from "poseidon-lite"
 import { saveInfoJSON } from "../utils/save-info"
 
+const createDataToSave = (bench: Bench) => {
+    const result = bench.tasks.map((task, i) => {
+        if (task === undefined || task.result === undefined) return "NaN"
+
+        let text = ""
+
+        if (task.name.includes("LeanIMT")) {
+            const imtAvgExecTime = bench.tasks[i - 1].result?.mean
+
+            const leanIMTAvgExecTime = bench.tasks[i]!.result?.mean
+
+            if (imtAvgExecTime === undefined || leanIMTAvgExecTime === undefined) return "NaN"
+
+            if (imtAvgExecTime > leanIMTAvgExecTime) {
+                text = `${(imtAvgExecTime / leanIMTAvgExecTime).toFixed(2)} x faster`
+            } else {
+                text = `${(leanIMTAvgExecTime / imtAvgExecTime).toFixed(2)} x slower`
+            }
+        }
+
+        return {
+            Function: task.name,
+            "ops/sec": task.result.error ? "NaN" : parseInt(task.result.hz.toString(), 10),
+            "Average Time (ms)": task.result.error ? "NaN" : task.result.mean.toFixed(5),
+            Samples: task.result.error ? "NaN" : task.result.samples.length,
+            "Relative to IMT": text,
+            ...task.result
+        }
+    })
+
+    return result
+}
+
 const generateTable = (task: Task) => {
     if (task && task.name && task.result) {
         return {
@@ -19,7 +52,9 @@ const generateTable = (task: Task) => {
 }
 
 async function main() {
-    const samples = 131090
+    // const samples = 131090
+
+    const samples = 2
 
     const bench = new Bench({ time: 0, iterations: samples })
 
@@ -34,7 +69,7 @@ async function main() {
     bench
         .add(
             "IMT - Insert",
-            () => {
+            async () => {
                 imt.insert(1n)
             },
             {
@@ -55,7 +90,7 @@ async function main() {
         )
         .add(
             "LeanIMT - Insert",
-            () => {
+            async () => {
                 leanIMT.insert(1n)
             },
             {
@@ -65,7 +100,7 @@ async function main() {
             }
         )
 
-    await bench.warmup()
+    // await bench.warmup()
     await bench.run()
 
     const table = bench.table((task) => generateTable(task))
@@ -81,9 +116,13 @@ async function main() {
 
             const leanIMTAvgExecTime = bench.tasks[i]!.result?.mean
 
-            if (imtAvgExecTime && leanIMTAvgExecTime) {
+            if (imtAvgExecTime === undefined || leanIMTAvgExecTime === undefined) return
+
+            if (imtAvgExecTime > leanIMTAvgExecTime) {
                 rowInfo["Relative to IMT"] = `${(imtAvgExecTime / leanIMTAvgExecTime).toFixed(2)} x faster`
-            } else return "NaN"
+            } else {
+                rowInfo["Relative to IMT"] = `${(leanIMTAvgExecTime / imtAvgExecTime).toFixed(2)} x slower`
+            }
         }
     })
 
@@ -93,7 +132,7 @@ async function main() {
 
     const filePath = "./data/insert.json"
 
-    saveInfoJSON(bench.results, filePath)
+    saveInfoJSON(createDataToSave(bench), filePath)
 }
 
 main()

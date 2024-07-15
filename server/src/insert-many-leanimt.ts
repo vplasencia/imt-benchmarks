@@ -42,7 +42,7 @@ async function main() {
     bench
         .add(
             "LeanIMT - insert in Loop",
-            () => {
+            async () => {
                 for (let i = 0; i < count1; i++) {
                     leanIMT1.insert(members1[i])
                 }
@@ -57,7 +57,7 @@ async function main() {
         )
         .add(
             "LeanIMT - insertMany",
-            () => {
+            async () => {
                 leanIMT2.insertMany(members2)
             },
             {
@@ -69,7 +69,7 @@ async function main() {
             }
         )
 
-    await bench.warmup()
+    // await bench.warmup()
     await bench.run()
 
     const table = bench.table((task) => generateTable(task))
