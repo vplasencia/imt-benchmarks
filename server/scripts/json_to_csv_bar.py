@@ -40,7 +40,7 @@ for value in data_dict_values[0]:
 # Add the values to the data_structures_values dictionary
 for item in data:
     [ data_structure, _ ] = item["Function"].split(" - ")
-    data_structures_values[data_structure] = item["Average Time (ms)"]
+    data_structures_values[data_structure].append(item["Average Time (ms)"])
     
 # Add the functiona names to the data frame
 df["Function"] = data_dict_keys

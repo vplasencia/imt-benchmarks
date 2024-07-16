@@ -29,9 +29,9 @@ const createDataToSave = (bench: Bench) => {
 
         return {
             Function: task.name,
-            "ops/sec": task.result.error ? "NaN" : parseInt(task.result.hz.toString(), 10).toLocaleString(),
+            "ops/sec": task.result.error ? "NaN" : parseInt(task.result.hz.toString(), 10),
             "Average Time (ms)": task.result.error ? "NaN" : task.result.mean.toFixed(5),
-            Iterations: task.result.error ? "NaN" : task.result.samples.length,
+            Samples: task.result.error ? "NaN" : task.result.samples.length,
             "Relative to IMT": text,
             ...task.result
         }
@@ -52,7 +52,7 @@ const generateTable = (task: Task) => {
 }
 
 async function main() {
-    const samples = 3
+    const samples = 100
 
     const bench = new Bench({ time: 0, iterations: samples })
 

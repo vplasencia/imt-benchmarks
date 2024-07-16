@@ -54,7 +54,7 @@ const generateTable = (task: Task) => {
 async function main() {
     // const samples = 131090
 
-    const samples = 2
+    const samples = 1000
 
     const bench = new Bench({ time: 0, iterations: samples })
 
