@@ -16,7 +16,10 @@ data = read_json_data(f'./data/{args.file}.json')
 # Convert JSON data to DataFrame
 df = pd.DataFrame(data)
 
-table_df = df[['Function', 'ops/sec', 'Average Time (ms)', 'Relative to IMT']]
+if("leanimt" in args.file):
+    table_df = df[['Function', 'ops/sec', 'Average Time (ms)', 'Relative to Insert']]
+else:
+    table_df = df[['Function', 'ops/sec', 'Average Time (ms)', 'Relative to IMT']]
 
 # Save DataFrame to CSV
 csv_file_path = f'./data/{args.file}-table.csv'
