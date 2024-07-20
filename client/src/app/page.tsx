@@ -487,7 +487,7 @@ export default function Home() {
         return data
     }
 
-    const handleDownload = async () => {
+    const downloadData = async () => {
         const jsonData = await generateBenchmarks()
 
         const filename = "functions-browser"
@@ -518,13 +518,7 @@ export default function Home() {
                 <Table data={tableInfo} />
             </div>
             <div className="mt-10">
-                {/* <button
-              onClick={saveBenchmarks}
-              className=""
-            >
-              Save Benchmarks
-            </button> */}
-                <button onClick={handleDownload}>Download JSON</button>
+                <button onClick={downloadData}>Download Function Benchmarks</button>
             </div>
         </div>
     )
