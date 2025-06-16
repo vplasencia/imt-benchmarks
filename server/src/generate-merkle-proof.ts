@@ -82,12 +82,12 @@ async function main() {
         .add(
             "GenerateProof - 2^25",
             async () => {
+                leanIMT = new LeanIMT(leanIMTHash, members)
                 leanIMT.generateProof(index)
             },
             {
                 beforeAll: () => {
                     members = Array.from({ length: 33554432 }, (_, i) => BigInt(i + 1))
-                    leanIMT = new LeanIMT(leanIMTHash, members)
                 },
                 beforeEach: () => {
                     index = getRandomInRange(0, members.length - 1)
